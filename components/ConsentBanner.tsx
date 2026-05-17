@@ -155,17 +155,14 @@ export default function ConsentBanner() {
     personalization: false,
   });
 
-  const slideAnim = useRef(new Animated.Value(400)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(300)).current;
+  const opacityAnim = useRef(new Animated.Value(1)).current;
 
   const shouldShow = !loading && consent.hasConsented === null;
 
   useEffect(() => {
     if (shouldShow) {
-      Animated.parallel([
-        Animated.timing(opacityAnim, { toValue: 1, duration: 300, useNativeDriver: true }),
-        Animated.spring(slideAnim, { toValue: 0, tension: 70, friction: 12, useNativeDriver: true }),
-      ]).start();
+      Animated.spring(slideAnim, { toValue: 0, tension: 70, friction: 12, useNativeDriver: true }).start();
     }
   }, [shouldShow]);
 
