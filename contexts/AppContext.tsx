@@ -91,6 +91,7 @@ function userToProfile(u: User): Profile {
     },
     lastSeen: u.last_seen ?? null,
     profilePrompts: (u.profile_prompts as { promptId: string; answer: string }[] | undefined) ?? [],
+    relationType: u.relation_type ?? undefined,
   };
 }
 

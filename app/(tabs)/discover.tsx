@@ -587,6 +587,8 @@ export default function DiscoverScreen() {
     if (p.age < filters.ageMin || p.age > filters.ageMax) return false;
     // Filtre automatique basé sur les préférences du profil actuel
     if (myLookingFor && myLookingFor !== 'everyone' && p.gender !== myLookingFor) return false;
+    // Filtre type de relation
+    if (filters.relationTypes.length > 0 && p.relationType && !filters.relationTypes.includes(p.relationType)) return false;
     // ✅ Filtre distance — applique la formule Haversine si coordonnées disponibles
     if (filters.maxDistance > 0) {
       if (!userCoords) return true; // GPS pas encore demandé → ne pas bloquer

@@ -23,6 +23,7 @@ export interface Profile {
   matchId?: string;
   lastSeen?: string | null;
   profilePrompts?: { promptId: string; answer: string }[];
+  relationType?: string;
 }
 
 export interface CurrentUser {
