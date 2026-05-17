@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:1640px; height:624px; background:#0a0118; font-family:'SF Pro Display',system-ui,sans-serif; overflow:hidden; }
+
+.wrap {
+  width:1640px; height:624px;
+  background: linear-gradient(125deg, #0a0118 0%, #1a0535 35%, #0f0a28 65%, #0a0118 100%);
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 100px;
+  position:relative; overflow:hidden;
+}
+
+/* Orbes déco */
+.orb { position:absolute; border-radius:50%; filter:blur(80px); pointer-events:none; }
+.o1 { width:600px;height:600px; background:radial-gradient(circle,rgba(255,107,157,0.16) 0%,transparent 70%); top:-200px; right:200px; }
+.o2 { width:400px;height:400px; background:radial-gradient(circle,rgba(155,89,182,0.14) 0%,transparent 70%); bottom:-100px; left:300px; }
+.o3 { width:300px;height:300px; background:radial-gradient(circle,rgba(200,80,192,0.1) 0%,transparent 70%); top:-50px; left:600px; }
+
+/* Ligne déco */
+.line {
+  position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg, transparent 0%, #FF6B9D 30%, #C850C0 50%, #9B59B6 70%, transparent 100%);
+  opacity:0.8;
+}
+.line-bottom {
+  position:absolute; bottom:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,107,157,0.3), transparent);
+}
+
+/* Particules */
+.particle { position:absolute; border-radius:50%; }
+.p1 { width:8px;height:8px; background:#FF6B9D; top:80px; right:380px; box-shadow:0 0 16px #FF6B9D; }
+.p2 { width:5px;height:5px; background:#B47FCA; top:200px; right:280px; box-shadow:0 0 10px #9B59B6; }
+.p3 { width:6px;height:6px; background:#FF8FB5; bottom:120px; right:450px; box-shadow:0 0 12px #FF6B9D; }
+.p4 { width:4px;height:4px; background:#C0A0DC; bottom:80px; right:320px; box-shadow:0 0 8px #9B59B6; }
+.p5 { width:7px;height:7px; background:#FF6B9D; top:100px; left:780px; box-shadow:0 0 14px #FF6B9D; opacity:0.6; }
+.p6 { width:3px;height:3px; background:#B47FCA; bottom:160px; left:860px; box-shadow:0 0 8px #9B59B6; opacity:0.7; }
+
+/* LEFT — Logo + nom */
+.left {
+  display:flex; align-items:center; gap:36px;
+  flex-shrink:0;
+}
+.logo-circle {
+  width:130px; height:130px; border-radius:50%;
+  background:linear-gradient(135deg, rgba(255,107,157,0.1), rgba(155,89,182,0.1));
+  border:2px solid rgba(255,107,157,0.3);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: 0 0 40px rgba(255,107,157,0.15);
+  flex-shrink:0;
+}
+.logo-text-block { display:flex; flex-direction:column; gap:6px; }
+.brand { font-size:72px; font-weight:900; letter-spacing:-2px; line-height:1;
+  background:linear-gradient(135deg, #FF6B9D, #C850C0, #9B59B6);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.tagline { font-size:22px; color:rgba(240,230,255,0.55); font-weight:400; letter-spacing:0.02em; }
+
+/* CENTER — Séparateur vertical */
+.sep {
+  width:1px; height:220px;
+  background:linear-gradient(180deg, transparent, rgba(255,107,157,0.35), transparent);
+  flex-shrink:0;
+  margin:0 60px;
+}
+
+/* RIGHT — Features */
+.right {
+  display:flex; flex-direction:column; gap:28px;
+  flex:1;
+}
+.feat {
+  display:flex; align-items:center; gap:20px;
+}
+.feat-icon {
+  width:52px; height:52px; border-radius:14px; flex-shrink:0;
+  background:rgba(255,107,157,0.1); border:1px solid rgba(255,107,157,0.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px;
+}
+.feat-text { display:flex; flex-direction:column; gap:2px; }
+.feat-title { font-size:22px; font-weight:700; color:#F0E6FF; }
+.feat-sub { font-size:16px; color:rgba(155,138,176,0.8); }
+
+/* BADGE lancement */
+.badge-wrap {
+  position:absolute; bottom:32px; right:100px;
+  display:flex; align-items:center; gap:10px;
+  background:rgba(255,107,157,0.08); border:1px solid rgba(255,107,157,0.2);
+  border-radius:50px; padding:8px 20px;
+}
+.dot { width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80; }
+.badge-text { font-size:16px; color:rgba(240,230,255,0.65); font-weight:500; }
+.badge-url { font-size:16px; color:#FF8FB5; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+  <div class="line"></div>
+  <div class="line-bottom"></div>
+  <div class="particle p1"></div>
+  <div class="particle p2"></div>
+  <div class="particle p3"></div>
+  <div class="particle p4"></div>
+  <div class="particle p5"></div>
+  <div class="particle p6"></div>
+
+  <!-- Logo + nom -->
+  <div class="left">
+    <div class="logo-circle">
+      <svg width="70" height="66" viewBox="0 0 90 85" fill="none">
+        <defs>
+          <linearGradient id="hg" x1="0" y1="0" x2="90" y2="85" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF6B9D"/>
+            <stop offset="50%" stop-color="#C850C0"/>
+            <stop offset="100%" stop-color="#9B59B6"/>
+          </linearGradient>
+        </defs>
+        <path d="M45 74s-29-19.5-29-39A16.5 16.5 0 0 1 45 22a16.5 16.5 0 0 1 29 13c0 19.5-29 39-29 39z" fill="url(#hg)" filter="url(#glow)"/>
+        <defs><filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      </svg>
+    </div>
+    <div class="logo-text-block">
+      <div class="brand">NextLove</div>
+      <div class="tagline">Rencontres basées sur la psychologie 💜</div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- Features -->
+  <div class="right">
+    <div class="feat">
+      <div class="feat-icon">🧠</div>
+      <div class="feat-text">
+        <div class="feat-title">7 dimensions de compatibilité</div>
+        <div class="feat-sub">Valeurs · Famille · Intimité · Personnalité…</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💜</div>
+      <div class="feat-text">
+        <div class="feat-title">Score visible avant le match</div>
+        <div class="feat-sub">Tu sais tout de suite si ça vaut la peine</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💬</div>
+      <div class="feat-text">
+        <div class="feat-title">Icebreakers personnalisés</div>
+        <div class="feat-sub">La conversation démarre naturellement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Badge URL -->
+  <div class="badge-wrap">
+    <div class="dot"></div>
+    <div class="badge-text">Bientôt disponible ·</div>
+    <div class="badge-url">nextlove.app</div>
+  </div>
+</div>
+</body>
+</html>

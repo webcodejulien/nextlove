@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390px">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 390px;
+    min-height: 844px;
+    background: linear-gradient(180deg, #0F0520 0%, #1A0A35 50%, #2D0A50 100%);
+    font-family: -apple-system, 'SF Pro Display', sans-serif;
+    color: #fff;
+    padding: 48px 20px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .crown { font-size: 48px; margin-bottom: 8px; }
+  .title { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; }
+  .title span { background: linear-gradient(90deg, #FF6B9D, #9B59B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: 14px; color: #8060A0; margin-top: 6px; margin-bottom: 24px; text-align: center; }
+
+  .plans { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+  .plan {
+    border-radius: 16px;
+    padding: 16px;
+    border: 1.5px solid #4A2080;
+    background: rgba(42, 16, 80, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+  }
+  .plan.popular {
+    border-color: #FF6B9D;
+    background: rgba(255, 107, 157, 0.08);
+  }
+  .badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: linear-gradient(90deg, #FF6B9D, #9B59B6);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .plan-left { display: flex; flex-direction: column; gap: 2px; }
+  .plan-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .plan-desc { font-size: 12px; color: #8060A0; }
+  .plan-price { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .price-main { font-size: 20px; font-weight: 800; color: #fff; }
+  .price-sub { font-size: 11px; color: #8060A0; }
+  .plan.selected { border-color: #FF6B9D; }
+  .radio {
+    width: 20px; height: 20px; border-radius: 10px;
+    border: 2px solid #4A2080;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .radio.checked { border-color: #FF6B9D; background: #FF6B9D; }
+  .radio.checked::after {
+    content: '✓'; color: white; font-size: 11px; font-weight: 900;
+  }
+
+  .features { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .feature { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #C8A0E8; }
+  .feature-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, #FF6B9D22, #9B59B622);
+    border: 1px solid #FF6B9D44;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+
+  .cta {
+    width: 100%;
+    background: linear-gradient(90deg, #FF6B9D, #9B59B6);
+    border: none;
+    border-radius: 16px;
+    padding: 18px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+  .legal { font-size: 11px; color: #4A2080; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="crown">👑</div>
+<div class="title">NextLove <span>Gold</span></div>
+<div class="subtitle">Rencontres sans limites</div>
+
+<div class="plans">
+
+  <div class="plan">
+    <div class="radio"></div>
+    <div class="plan-left">
+      <div class="plan-name">1 semaine</div>
+      <div class="plan-desc">Essai flexible</div>
+    </div>
+    <div class="plan-price">
+      <div class="price-main">3,99 €</div>
+      <div class="price-sub">/ semaine</div>
+    </div>
+  </div>
+
+  <div class="plan popular selected">
+    <div class="badge">⭐ Le plus populaire</div>
+    <div class="radio checked"></div>
+    <div class="plan-left">
+      <div class="plan-name">1 mois</div>
+      <div class="plan-desc">Recommandé</div>
+    </div>
+    <div class="plan-price">
+      <div class="price-main">9,99 €</div>
+      <div class="price-sub">/ mois</div>
+    </div>
+  </div>
+
+  <div class="plan">
+    <div class="radio"></div>
+    <div class="plan-left">
+      <div class="plan-name">3 mois</div>
+      <div class="plan-desc">Économisez 33%</div>
+    </div>
+    <div class="plan-price">
+      <div class="price-main">19,99 €</div>
+      <div class="price-sub">6,66 €/mois</div>
+    </div>
+  </div>
+
+  <div class="plan">
+    <div class="radio"></div>
+    <div class="plan-left">
+      <div class="plan-name">1 an</div>
+      <div class="plan-desc">Meilleure valeur 🔥</div>
+    </div>
+    <div class="plan-price">
+      <div class="price-main">39,99 €</div>
+      <div class="price-sub">3,33 €/mois</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="features">
+  <div class="feature"><div class="feature-icon">♾️</div> Likes illimités chaque jour</div>
+  <div class="feature"><div class="feature-icon">👁️</div> Voir qui a consulté votre profil</div>
+  <div class="feature"><div class="feature-icon">⭐</div> 5 Super Likes par jour</div>
+  <div class="feature"><div class="feature-icon">🚀</div> Boost de visibilité 30 min/jour</div>
+  <div class="feature"><div class="feature-icon">↩️</div> Retour en arrière illimité</div>
+  <div class="feature"><div class="feature-icon">🚫</div> Expérience sans publicité</div>
+</div>
+
+<div class="cta">Commencer mon essai Gold</div>
+<div class="legal">Abonnement auto-renouvelable · Annulation à tout moment<br>Géré via Apple ID · Conditions générales s'appliquent</div>
+
+</body>
+</html>

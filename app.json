@@ -1,0 +1,117 @@
+{
+  "expo": {
+    "name": "NextLove",
+    "slug": "nextlove",
+    "scheme": "nextlove",
+    "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0F0520"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.nextlove.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "NextLove vous notifie pour les nouveaux matchs, messages et likes.",
+        "NSLocationWhenInUseUsageDescription": "NextLove utilise votre position pour filtrer les profils par distance.",
+        "NSCameraUsageDescription": "NextLove utilise votre appareil photo pour prendre une photo de profil.",
+        "NSPhotoLibraryUsageDescription": "NextLove accède à votre galerie pour choisir une photo de profil.",
+        "NSMicrophoneUsageDescription": "Accès microphone non utilisé.",
+        "GADApplicationIdentifier": "ca-app-pub-3940256099942544~1458002511"
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ]
+      },
+      "entitlements": {
+        "aps-environment": "production"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0F0520"
+      },
+      "package": "com.nextlove.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "NextLove utilise votre position pour filtrer les profils par distance.",
+          "locationWhenInUsePermission": "NextLove utilise votre position pour filtrer les profils par distance."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "NextLove accède à votre galerie pour choisir une photo de profil.",
+          "cameraPermission": "NextLove utilise votre appareil photo pour prendre une photo de profil.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "merchant.com.nextlove.app",
+          "enableGooglePay": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#FF6B9D",
+          "sounds": [],
+          "iosDisplayInForeground": true
+        }
+      ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "newArchEnabled": false,
+    "extra": {
+      "eas": {
+        "projectId": "nextlove-app"
+      }
+    }
+  }
+}

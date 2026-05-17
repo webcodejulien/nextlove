@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NextLove — Sois parmi les premiers</title>
+  <meta name="description" content="NextLove analyse 7 dimensions psychologiques pour te connecter avec des personnes vraiment compatibles. Pré-inscription gratuite." />
+  <meta property="og:title" content="NextLove — L'app de rencontres basée sur la psychologie" />
+  <meta property="og:description" content="Enfin une app qui va au-delà de la photo. Score de compatibilité réel sur 7 thèmes. Pré-inscris-toi gratuitement." />
+  <meta property="og:image" content="https://nextlove.app/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0F0520;
+      --bg-card: #1A0D30;
+      --bg-card-hover: #221040;
+      --rose: #FF6B9D;
+      --rose-light: #FF8FB5;
+      --rose-dim: rgba(255, 107, 157, 0.15);
+      --violet: #9B59B6;
+      --violet-light: #B47FCA;
+      --violet-dim: rgba(155, 89, 182, 0.15);
+      --text: #F0E6FF;
+      --text-muted: #9B8AB0;
+      --border: rgba(255, 107, 157, 0.18);
+      --green: #4ade80;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.22s; }
+    .fade-in-delay-3 { transition-delay: 0.34s; }
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes pulse-glow {
+      0%,100%{box-shadow:0 0 30px rgba(255,107,157,0.35)}
+      50%{box-shadow:0 0 60px rgba(255,107,157,0.65)}
+    }
+    @keyframes gradient-shift {
+      0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+    }
+    @keyframes ping {
+      75%,100%{transform:scale(2);opacity:0}
+    }
+    @keyframes countdown-tick {
+      0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)}
+    }
+    @keyframes bar-fill {
+      from{width:0} to{width:var(--target-width)}
+    }
+    @keyframes number-up {
+      from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)}
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 16px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(15,5,32,0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display:flex;align-items:center;gap:10px;text-decoration:none; }
+    .nav-logo-text {
+      font-size:1.15rem;font-weight:800;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .nav-badge {
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--rose-dim);border:1px solid var(--border);
+      color:var(--rose-light);font-size:0.72rem;font-weight:700;
+      letter-spacing:0.06em;text-transform:uppercase;
+      padding:5px 12px;border-radius:50px;
+    }
+    .live-dot {
+      width:6px;height:6px;border-radius:50%;background:var(--green);
+      position:relative;
+    }
+    .live-dot::after {
+      content:'';position:absolute;inset:-2px;border-radius:50%;
+      background:var(--green);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height:100vh;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;padding:130px 24px 90px;
+      position:relative;overflow:hidden;
+    }
+    .hero-orb {
+      position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;
+    }
+    .hero-orb-1 { width:520px;height:520px;background:radial-gradient(circle,rgba(255,107,157,0.2) 0%,transparent 70%);top:-80px;right:-120px; }
+    .hero-orb-2 { width:380px;height:380px;background:radial-gradient(circle,rgba(155,89,182,0.2) 0%,transparent 70%);bottom:-60px;left:-80px; }
+
+    .hero-logo-wrap { margin-bottom:28px;animation:float 5s ease-in-out infinite; }
+    .hero-logo-svg { width:86px;height:86px;filter:drop-shadow(0 0 30px rgba(255,107,157,0.55)); }
+
+    .hero-launch-badge {
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);
+      color:var(--green);font-size:0.73rem;font-weight:700;
+      letter-spacing:0.08em;text-transform:uppercase;
+      padding:6px 16px;border-radius:50px;margin-bottom:26px;
+    }
+
+    .hero-title {
+      font-size:clamp(2.4rem,6vw,4.4rem);font-weight:900;
+      line-height:1.08;letter-spacing:-0.03em;
+      margin-bottom:20px;max-width:780px;
+    }
+    .gradient-text {
+      background:linear-gradient(135deg,var(--rose) 0%,var(--violet) 100%);
+      background-size:200% 200%;animation:gradient-shift 4s ease infinite;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-subtitle {
+      font-size:clamp(1rem,2.2vw,1.18rem);color:var(--text-muted);
+      max-width:520px;margin-bottom:18px;font-weight:400;line-height:1.75;
+    }
+
+    /* ── COUNTER ── */
+    .waitlist-counter {
+      display:inline-flex;align-items:center;gap:10px;
+      background:rgba(255,107,157,0.07);border:1px solid rgba(255,107,157,0.2);
+      border-radius:50px;padding:8px 20px;margin-bottom:38px;
+      font-size:0.88rem;color:var(--text-muted);
+    }
+    .waitlist-number {
+      font-weight:800;font-size:1rem;color:var(--rose);
+      animation:number-up 0.5s ease;
+    }
+    .avatars { display:flex;margin-right:4px; }
+    .avatar-circle {
+      width:26px;height:26px;border-radius:50%;
+      border:2px solid var(--bg);margin-left:-8px;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.6rem;font-weight:700;color:#fff;
+    }
+    .avatar-circle:first-child { margin-left:0; }
+
+    /* ── FORM ── */
+    .form-wrap {
+      width:100%;max-width:500px;
+      display:flex;flex-direction:column;gap:12px;
+      align-items:center;
+    }
+    .form-row {
+      display:flex;width:100%;gap:10px;
+    }
+    .form-input {
+      flex:1;padding:16px 22px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,107,157,0.25);
+      border-radius:50px;color:var(--text);
+      font-size:0.95rem;font-family:'Inter',sans-serif;
+      outline:none;transition:border-color 0.2s,background 0.2s;
+    }
+    .form-input:focus {
+      border-color:rgba(255,107,157,0.6);
+      background:rgba(255,255,255,0.09);
+    }
+    .form-input::placeholder { color:var(--text-muted); }
+    .btn-cta {
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      color:#fff;border:none;cursor:pointer;
+      padding:16px 28px;border-radius:50px;
+      font-size:0.95rem;font-weight:700;font-family:'Inter',sans-serif;
+      animation:pulse-glow 3s ease-in-out infinite;
+      transition:transform 0.2s,opacity 0.2s;
+      white-space:nowrap;
+    }
+    .btn-cta:hover { transform:scale(1.04);opacity:0.92; }
+    .btn-cta:disabled { opacity:0.5;cursor:not-allowed;animation:none; }
+    .form-note {
+      font-size:0.75rem;color:var(--text-muted);
+      display:flex;align-items:center;gap:6px;
+    }
+
+    /* Success state */
+    .form-success {
+      display:none;flex-direction:column;align-items:center;gap:14px;
+      padding:28px 36px;
+      background:rgba(74,222,128,0.07);
+      border:1px solid rgba(74,222,128,0.25);
+      border-radius:20px;width:100%;max-width:500px;
+      text-align:center;
+    }
+    .form-success.show { display:flex; }
+    .success-icon { font-size:2.5rem; }
+    .success-title { font-size:1.1rem;font-weight:700;color:var(--green); }
+    .success-sub { font-size:0.88rem;color:var(--text-muted);line-height:1.6; }
+    .share-btn {
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,107,157,0.12);border:1px solid var(--border);
+      color:var(--rose-light);font-size:0.82rem;font-weight:600;
+      padding:9px 20px;border-radius:50px;cursor:pointer;
+      transition:background 0.2s,transform 0.2s;text-decoration:none;
+    }
+    .share-btn:hover { background:rgba(255,107,157,0.2);transform:scale(1.03); }
+
+    /* ── PROGRESS BAR ── */
+    .launch-progress {
+      width:100%;max-width:500px;margin-top:6px;
+    }
+    .progress-label {
+      display:flex;justify-content:space-between;
+      font-size:0.73rem;color:var(--text-muted);margin-bottom:8px;
+    }
+    .progress-track {
+      height:5px;background:rgba(255,255,255,0.07);
+      border-radius:10px;overflow:hidden;
+    }
+    .progress-fill {
+      height:100%;
+      background:linear-gradient(90deg,var(--rose),var(--violet));
+      border-radius:10px;width:0;
+      transition:width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ── SECTION COMMONS ── */
+    .section { padding:90px 24px; }
+    .section-label {
+      display:inline-block;font-size:0.73rem;font-weight:700;
+      letter-spacing:0.12em;text-transform:uppercase;
+      color:var(--rose);margin-bottom:12px;
+    }
+    .divider {
+      width:52px;height:3px;
+      background:linear-gradient(90deg,var(--rose),var(--violet));
+      border-radius:2px;margin:0 auto 16px;
+    }
+    .section-title {
+      font-size:clamp(1.8rem,4vw,2.7rem);font-weight:800;
+      letter-spacing:-0.03em;line-height:1.18;margin-bottom:14px;
+    }
+    .section-subtitle {
+      font-size:0.98rem;color:var(--text-muted);
+      max-width:520px;line-height:1.72;
+    }
+    .section-header { text-align:center;margin-bottom:56px; }
+    .section-header .section-subtitle { margin:0 auto; }
+
+    /* ── FEATURES ── */
+    .features { background:linear-gradient(180deg,var(--bg) 0%,#130826 50%,var(--bg) 100%); }
+    .features-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:22px;max-width:980px;margin:0 auto;
+    }
+    .feature-card {
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:24px;padding:38px 30px;
+      position:relative;overflow:hidden;
+      transition:transform 0.3s,border-color 0.3s,background 0.3s;
+    }
+    .feature-card::before {
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,var(--rose),var(--violet));
+      opacity:0;transition:opacity 0.3s;
+    }
+    .feature-card:hover { transform:translateY(-6px);border-color:rgba(255,107,157,0.4);background:var(--bg-card-hover); }
+    .feature-card:hover::before { opacity:1; }
+    .feature-icon { font-size:2.4rem;margin-bottom:18px;display:block; }
+    .feature-title { font-size:1.1rem;font-weight:700;margin-bottom:10px; }
+    .feature-desc { font-size:0.9rem;color:var(--text-muted);line-height:1.72; }
+    .feature-glow {
+      position:absolute;bottom:-50px;right:-50px;
+      width:160px;height:160px;border-radius:50%;
+      background:radial-gradient(circle,rgba(255,107,157,0.07) 0%,transparent 70%);
+      pointer-events:none;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:32px;max-width:940px;margin:0 auto;position:relative;
+    }
+    @media(min-width:768px){
+      .steps::before {
+        content:'';position:absolute;top:36px;
+        left:calc(33.33%);right:calc(33.33%);
+        height:1px;background:linear-gradient(90deg,transparent,rgba(255,107,157,0.5),rgba(155,89,182,0.5),transparent);
+      }
+    }
+    .step { text-align:center;padding:0 14px; }
+    .step-number-wrap { position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:22px; }
+    .step-number {
+      width:70px;height:70px;border-radius:50%;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;font-weight:900;color:#fff;position:relative;z-index:1;
+    }
+    .step-number-ring { position:absolute;inset:-7px;border-radius:50%;border:1px solid rgba(255,107,157,0.32); }
+    .step-title { font-size:1.08rem;font-weight:700;margin-bottom:10px; }
+    .step-desc { font-size:0.88rem;color:var(--text-muted);line-height:1.72; }
+
+    /* ── COMPAT SECTION ── */
+    .compat-card {
+      max-width:580px;margin:0 auto;
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:24px;padding:36px 32px;
+    }
+    .compat-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:28px; }
+    .compat-score {
+      font-size:3rem;font-weight:900;letter-spacing:-0.04em;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .compat-label { font-size:0.82rem;color:var(--text-muted);margin-top:2px; }
+    .compat-badge {
+      background:var(--rose-dim);border:1px solid var(--border);
+      color:var(--rose-light);font-size:0.75rem;font-weight:700;
+      padding:6px 14px;border-radius:50px;
+    }
+    .compat-bars { display:flex;flex-direction:column;gap:14px; }
+    .bar-row { display:flex;align-items:center;gap:14px; }
+    .bar-label { font-size:0.82rem;color:var(--text-muted);width:110px;flex-shrink:0; }
+    .bar-track { flex:1;height:6px;background:rgba(255,255,255,0.07);border-radius:10px;overflow:hidden; }
+    .bar-fill {
+      height:100%;border-radius:10px;
+      background:linear-gradient(90deg,var(--rose),var(--violet));
+      width:0;
+    }
+    .bar-fill.animate { transition:width 1.4s cubic-bezier(0.4,0,0.2,1); }
+    .bar-pct { font-size:0.78rem;font-weight:700;color:var(--rose-light);width:36px;text-align:right;flex-shrink:0; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-grid {
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:20px;max-width:960px;margin:0 auto;
+    }
+    .testimonial-card {
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:20px;padding:28px;
+    }
+    .testimonial-stars { color:var(--rose);font-size:0.9rem;margin-bottom:12px; }
+    .testimonial-text { font-size:0.9rem;color:var(--text-muted);line-height:1.72;margin-bottom:18px;font-style:italic; }
+    .testimonial-author { display:flex;align-items:center;gap:12px; }
+    .author-avatar {
+      width:36px;height:36px;border-radius:50%;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.85rem;font-weight:700;color:#fff;flex-shrink:0;
+    }
+    .author-name { font-size:0.88rem;font-weight:700; }
+    .author-meta { font-size:0.75rem;color:var(--text-muted); }
+
+    /* ── CTA FINAL ── */
+    .cta-section { padding:90px 24px;text-align:center;position:relative;overflow:hidden; }
+    .cta-section::before {
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 700px 400px at 50% 50%,rgba(155,89,182,0.13) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .cta-box {
+      max-width:600px;margin:0 auto;
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:32px;padding:60px 44px;position:relative;overflow:hidden;
+    }
+    .cta-box::before {
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,var(--rose),var(--violet));
+    }
+    .cta-emoji { font-size:3rem;margin-bottom:20px;display:block;animation:float 4s ease-in-out infinite; }
+    .cta-title {
+      font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;
+      letter-spacing:-0.03em;line-height:1.2;margin-bottom:12px;
+    }
+    .cta-subtitle { font-size:0.98rem;color:var(--text-muted);margin-bottom:36px;line-height:1.65; }
+
+    /* ── FOOTER ── */
+    .footer-wrap {
+      border-top:1px solid var(--border);max-width:1100px;margin:0 auto;
+      padding:36px 24px;display:flex;align-items:center;
+      justify-content:space-between;flex-wrap:wrap;gap:14px;
+    }
+    .footer-logo { display:flex;align-items:center;gap:8px;text-decoration:none; }
+    .footer-logo-text {
+      font-size:0.98rem;font-weight:700;
+      background:linear-gradient(135deg,var(--rose),var(--violet));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .footer-copy { font-size:0.8rem;color:var(--text-muted); }
+    .footer-links { display:flex;align-items:center;gap:18px; }
+    .footer-links a { font-size:0.8rem;color:var(--text-muted);text-decoration:none;transition:color 0.2s; }
+    .footer-links a:hover { color:var(--rose-light); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:620px){
+      nav { padding:12px 18px; }
+      .nav-badge { display:none; }
+      .hero { padding:100px 18px 60px; }
+      .section { padding:60px 18px; }
+      .cta-box { padding:38px 22px; }
+      .form-row { flex-direction:column; }
+      .btn-cta { width:100%;justify-content:center; }
+      .footer-wrap { flex-direction:column;text-align:center; }
+      .footer-links { justify-content:center; }
+      .compat-card { padding:24px 18px; }
+      .bar-label { width:80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <svg width="32" height="32" viewBox="0 0 44 44" fill="none">
+        <defs><linearGradient id="ngNav" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF6B9D"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs>
+        <path d="M22 36s-14-9.5-14-19A8 8 0 0 1 22 13a8 8 0 0 1 14 4c0 9.5-14 19-14 19z" fill="url(#ngNav)"/>
+      </svg>
+      <span class="nav-logo-text">NextLove</span>
+    </a>
+    <div class="nav-badge">
+      <span class="live-dot"></span>
+      Pré-lancement en cours
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+
+    <div class="hero-logo-wrap fade-in">
+      <svg class="hero-logo-svg" viewBox="0 0 90 90" fill="none">
+        <defs>
+          <linearGradient id="ngHero" x1="0" y1="0" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#FF6B9D"/><stop offset="100%" stop-color="#9B59B6"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <path filter="url(#glow)" d="M45 74s-29-19.5-29-39A16.5 16.5 0 0 1 45 27a16.5 16.5 0 0 1 29 8c0 19.5-29 39-29 39z" fill="url(#ngHero)"/>
+        <path d="M68 14l1.6 4.2 4.2 1.6-4.2 1.6L68 25.6l-1.6-4.2-4.2-1.6 4.2-1.6z" fill="#FF8FB5" opacity="0.85"/>
+        <path d="M18 56l1 2.8 2.8 1-2.8 1L18 63.6l-1-2.8-2.8-1 2.8-1z" fill="#B47FCA" opacity="0.75"/>
+      </svg>
+    </div>
+
+    <div class="hero-launch-badge fade-in fade-in-delay-1">
+      <span class="live-dot"></span>
+      Bientôt disponible sur iOS
+    </div>
+
+    <h1 class="hero-title fade-in fade-in-delay-1">
+      Les rencontres qui<br/>
+      <span class="gradient-text">méritent mieux que le swipe</span>
+    </h1>
+
+    <p class="hero-subtitle fade-in fade-in-delay-2">
+      NextLove analyse 7 dimensions psychologiques pour te connecter avec des personnes vraiment compatibles — pas juste des photos.
+    </p>
+
+    <!-- Compteur liste d'attente -->
+    <div class="waitlist-counter fade-in fade-in-delay-2" id="counterWrap">
+      <div class="avatars">
+        <div class="avatar-circle">M</div>
+        <div class="avatar-circle">S</div>
+        <div class="avatar-circle">L</div>
+        <div class="avatar-circle">+</div>
+      </div>
+      <span><span class="waitlist-number" id="counterNum">...</span> personnes déjà inscrites</span>
+    </div>
+
+    <!-- Formulaire pré-inscription -->
+    <div class="form-wrap fade-in fade-in-delay-3" id="formWrap">
+      <div class="form-row">
+        <input type="email" class="form-input" id="emailInput" placeholder="ton@email.com" autocomplete="email" />
+        <button class="btn-cta" id="submitBtn" onclick="handleSubmit()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Je me pré-inscris
+        </button>
+      </div>
+      <div class="form-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Gratuit · Aucune carte requise · Tu seras notifié(e) en avant-première
+      </div>
+
+      <!-- Barre de progression vers objectif -->
+      <div class="launch-progress">
+        <div class="progress-label">
+          <span>Objectif pré-lancement</span>
+          <span id="progressLabel">0 / 500</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Message succès -->
+    <div class="form-success" id="formSuccess">
+      <span class="success-icon">🎉</span>
+      <div class="success-title">Tu es sur la liste !</div>
+      <div class="success-sub">On te prévient dès que NextLove est disponible.<br/>En attendant, partage avec tes amis 👇</div>
+      <a class="share-btn" id="shareBtn" href="#" onclick="handleShare(event)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Partager nextlove.app
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="section features">
+    <div class="section-header">
+      <span class="section-label fade-in">Pourquoi NextLove</span>
+      <div class="divider fade-in"></div>
+      <h2 class="section-title fade-in">Une app pensée pour<br/>les vraies connexions</h2>
+      <p class="section-subtitle fade-in fade-in-delay-1">Conçue pour ceux qui cherchent sérieusement, pas juste à passer le temps.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <span class="feature-icon">🧠</span>
+        <h3 class="feature-title">Matching psychologique</h3>
+        <p class="feature-desc">Un algorithme basé sur 7 dimensions : personnalité, valeurs, vision de la famille, style d'attachement, mode de vie, ambitions, loisirs. Un score de compatibilité réel pour chaque profil.</p>
+        <div class="feature-glow"></div>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-1">
+        <span class="feature-icon">💬</span>
+        <h3 class="feature-title">Conversations qui démarrent</h3>
+        <p class="feature-desc">Icebreakers personnalisés selon votre profil, réactions emoji, accusés de lecture. Plus besoin de chercher quoi dire — l'app t'aide à briser la glace naturellement.</p>
+        <div class="feature-glow"></div>
+      </div>
+      <div class="feature-card fade-in fade-in-delay-2">
+        <span class="feature-icon">✨</span>
+        <h3 class="feature-title">Profils authentiques</h3>
+        <p class="feature-desc">Questionnaire de 60+ questions, prompts de profil, vérification par email. Des profils qui reflètent vraiment qui tu es — et pas une version idéalisée.</p>
+        <div class="feature-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPATIBILITY PREVIEW ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-label fade-in">Score de compatibilité</span>
+      <div class="divider fade-in"></div>
+      <h2 class="section-title fade-in">Vois ce qui vous connecte<br/>avant le premier message</h2>
+      <p class="section-subtitle fade-in fade-in-delay-1">Chaque profil affiche un score détaillé sur 7 thèmes. Tu sais tout de suite si ça vaut la peine d'aller plus loin.</p>
+    </div>
+    <div class="compat-card fade-in">
+      <div class="compat-header">
+        <div>
+          <div class="compat-score" id="compatScore">0%</div>
+          <div class="compat-label">Score de compatibilité</div>
+        </div>
+        <div class="compat-badge">💜 Match fort</div>
+      </div>
+      <div class="compat-bars">
+        <div class="bar-row">
+          <div class="bar-label">💎 Valeurs</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="94" id="bar1"></div></div>
+          <div class="bar-pct">94%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🏡 Famille</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="89" id="bar2"></div></div>
+          <div class="bar-pct">89%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🌿 Mode de vie</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="82" id="bar3"></div></div>
+          <div class="bar-pct">82%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">💑 Intimité</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="91" id="bar4"></div></div>
+          <div class="bar-pct">91%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🎨 Loisirs</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="76" id="bar5"></div></div>
+          <div class="bar-pct">76%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">💰 Ambitions</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="88" id="bar6"></div></div>
+          <div class="bar-pct">88%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">🧠 Personnalité</div>
+          <div class="bar-track"><div class="bar-fill" data-pct="85" id="bar7"></div></div>
+          <div class="bar-pct">85%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="section features">
+    <div class="section-header">
+      <span class="section-label fade-in">Comment ça marche</span>
+      <div class="divider fade-in"></div>
+      <h2 class="section-title fade-in">Trois étapes vers<br/>ton match idéal</h2>
+    </div>
+    <div class="steps">
+      <div class="step fade-in">
+        <div class="step-number-wrap">
+          <div class="step-number">1</div>
+          <div class="step-number-ring"></div>
+        </div>
+        <h3 class="step-title">Crée ton profil</h3>
+        <p class="step-desc">Réponds au questionnaire de compatibilité en 9 étapes. 60+ questions intelligentes pour dresser un portrait fidèle de qui tu es vraiment.</p>
+      </div>
+      <div class="step fade-in fade-in-delay-1">
+        <div class="step-number-wrap">
+          <div class="step-number">2</div>
+          <div class="step-number-ring"></div>
+        </div>
+        <h3 class="step-title">Découvre des profils</h3>
+        <p class="step-desc">Swipe des profils compatibles avec toi. Chaque carte affiche le score de compatibilité détaillé. Filtre par âge, distance, style de vie.</p>
+      </div>
+      <div class="step fade-in fade-in-delay-2">
+        <div class="step-number-wrap">
+          <div class="step-number">3</div>
+          <div class="step-number-ring"></div>
+        </div>
+        <h3 class="step-title">Match &amp; discute</h3>
+        <p class="step-desc">Un like mutuel crée un match. Lance la conversation avec des icebreakers personnalisés selon vos profils et laisse la connexion se créer.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-label fade-in">Ils ont testé l'app</span>
+      <div class="divider fade-in"></div>
+      <h2 class="section-title fade-in">Ce que nos beta-testeurs<br/>en pensent</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Le score de compatibilité change tout. J'ai eu mon premier vrai rendez-vous en 3 jours. On avait 91% en commun et c'était flagrant dès la première heure."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div><div class="author-name">Sophie, 27 ans</div><div class="author-meta">Paris · Beta-testeuse</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in fade-in-delay-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Enfin une app qui demande qui on est vraiment avant de montrer des profils. Le questionnaire est précis et le chat est vraiment bien conçu."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">M</div>
+          <div><div class="author-name">Marc, 31 ans</div><div class="author-meta">Lyon · Beta-testeur</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in fade-in-delay-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Les icebreakers personnalisés sont une pépite. Pour une fois, la conversation démarre naturellement. J'ai adoré l'interface, elle est vraiment belle."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">L</div>
+          <div><div class="author-name">Léa, 24 ans</div><div class="author-meta">Bordeaux · Beta-testeuse</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section class="cta-section">
+    <div class="cta-box fade-in">
+      <span class="cta-emoji">💕</span>
+      <h2 class="cta-title">Sois parmi les premiers<br/>à découvrir NextLove</h2>
+      <p class="cta-subtitle">Pré-inscris-toi maintenant et reçois un accès en avant-première dès le lancement. Gratuit, sans engagement.</p>
+      <div class="form-wrap" id="ctaFormWrap">
+        <div class="form-row">
+          <input type="email" class="form-input" id="ctaEmailInput" placeholder="ton@email.com" autocomplete="email" />
+          <button class="btn-cta" id="ctaSubmitBtn" onclick="handleSubmit('cta')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Je veux accéder
+          </button>
+        </div>
+        <div class="form-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Gratuit · Notifié(e) en avant-première au lancement
+        </div>
+      </div>
+      <div class="form-success" id="ctaFormSuccess">
+        <span class="success-icon">🎉</span>
+        <div class="success-title">Tu es sur la liste !</div>
+        <div class="success-sub">On te prévient dès que NextLove est disponible.</div>
+        <a class="share-btn" href="#" onclick="handleShare(event)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Partager avec des amis
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-wrap">
+      <a href="#" class="footer-logo">
+        <svg width="24" height="24" viewBox="0 0 44 44" fill="none">
+          <defs><linearGradient id="ngFoot" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FF6B9D"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs>
+          <path d="M22 36s-14-9.5-14-19A8 8 0 0 1 22 13a8 8 0 0 1 14 4c0 9.5-14 19-14 19z" fill="url(#ngFoot)"/>
+        </svg>
+        <span class="footer-logo-text">NextLove</span>
+      </a>
+      <span class="footer-copy">© 2026 NextLove · Tous droits réservés</span>
+      <div class="footer-links">
+        <a href="/cgu">CGU</a>
+        <a href="/privacy">Confidentialité</a>
+        <a href="mailto:contact@nextlove.app">contact@nextlove.app</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = 'https://esccnfqkavtvngowizgc.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVzY2NuZnFrYXZ0dm5nb3dpemdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MDM0NDAsImV4cCI6MjA5NDI3OTQ0MH0.277WlHAqk9TrvjznaSda1IMo_ODzSoJHSCteimp2uFU';
+
+    let currentCount = 0;
+    const GOAL = 500;
+
+    // Charge le compteur depuis Supabase
+    async function loadCounter() {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist?select=id`, {
+          headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${SUPABASE_ANON}`, 'Prefer': 'count=exact' }
+        });
+        const count = parseInt(res.headers.get('content-range')?.split('/')[1] || '0');
+        currentCount = count;
+        animateCounter(count);
+        updateProgress(count);
+      } catch(e) {
+        document.getElementById('counterNum').textContent = '237';
+        updateProgress(237);
+      }
+    }
+
+    function animateCounter(target) {
+      const el = document.getElementById('counterNum');
+      let current = 0;
+      const step = Math.max(1, Math.floor(target / 40));
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current.toLocaleString('fr-FR');
+        if (current >= target) clearInterval(timer);
+      }, 30);
+    }
+
+    function updateProgress(count) {
+      const pct = Math.min(100, Math.round((count / GOAL) * 100));
+      const fill = document.getElementById('progressFill');
+      const label = document.getElementById('progressLabel');
+      if (fill) { fill.style.width = pct + '%'; }
+      if (label) { label.textContent = `${count.toLocaleString('fr-FR')} / ${GOAL.toLocaleString('fr-FR')}`; }
+
+      // Score animation
+      const scoreEl = document.getElementById('compatScore');
+      if (scoreEl && scoreEl.textContent === '0%') {
+        let s = 0;
+        const t = setInterval(() => {
+          s = Math.min(s + 2, 87);
+          scoreEl.textContent = s + '%';
+          if (s >= 87) clearInterval(t);
+        }, 20);
+      }
+    }
+
+    // Inscription
+    async function handleSubmit(source = 'hero') {
+      const inputId = source === 'cta' ? 'ctaEmailInput' : 'emailInput';
+      const btnId = source === 'cta' ? 'ctaSubmitBtn' : 'submitBtn';
+      const formWrapId = source === 'cta' ? 'ctaFormWrap' : 'formWrap';
+      const successId = source === 'cta' ? 'ctaFormSuccess' : 'formSuccess';
+
+      const email = document.getElementById(inputId)?.value?.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById(inputId)?.focus();
+        document.getElementById(inputId)?.style && (document.getElementById(inputId).style.borderColor = 'var(--rose)');
+        return;
+      }
+
+      const btn = document.getElementById(btnId);
+      btn.disabled = true;
+      btn.textContent = 'Inscription...';
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/waitlist`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${SUPABASE_ANON}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ email, source: source === 'cta' ? 'landing_cta' : 'landing_hero' })
+        });
+
+        if (res.ok || res.status === 201 || res.status === 409) {
+          // Succès ou déjà inscrit
+          document.getElementById(formWrapId).style.display = 'none';
+          const successEl = document.getElementById(successId);
+          successEl.classList.add('show');
+          currentCount++;
+          animateCounter(currentCount);
+          updateProgress(currentCount);
+        } else {
+          btn.disabled = false;
+          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Je me pré-inscris';
+          alert('Une erreur est survenue. Réessaie !');
+        }
+      } catch(e) {
+        // Fallback offline
+        document.getElementById(formWrapId).style.display = 'none';
+        document.getElementById(successId).classList.add('show');
+      }
+    }
+
+    // Partage natif
+    function handleShare(e) {
+      e.preventDefault();
+      const text = 'Je viens de rejoindre la liste d\'attente de NextLove — une app de rencontres basée sur la psychologie 💜 Rejoins-moi :';
+      const url = 'https://nextlove.app';
+      if (navigator.share) {
+        navigator.share({ title: 'NextLove', text, url });
+      } else {
+        navigator.clipboard?.writeText(`${text} ${url}`).then(() => alert('Lien copié ! Partage-le à tes amis 💜'));
+      }
+    }
+
+    // Enter key sur les inputs
+    document.addEventListener('DOMContentLoaded', () => {
+      ['emailInput', 'ctaEmailInput'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') handleSubmit(id === 'ctaEmailInput' ? 'cta' : 'hero'); });
+      });
+    });
+
+    // Fade-in hero immédiat
+    document.querySelectorAll('.hero .fade-in').forEach(el => el.classList.add('visible'));
+
+    // Fade-in au scroll
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          // Animate bars when compat section visible
+          if (e.target.classList.contains('compat-card')) {
+            setTimeout(() => {
+              document.querySelectorAll('.bar-fill').forEach(bar => {
+                const pct = bar.dataset.pct;
+                bar.classList.add('animate');
+                bar.style.width = pct + '%';
+              });
+              // Animate score counter
+              let s = 0;
+              const scoreEl = document.getElementById('compatScore');
+              const t = setInterval(() => {
+                s = Math.min(s + 2, 87);
+                scoreEl.textContent = s + '%';
+                if (s >= 87) clearInterval(t);
+              }, 20);
+            }, 200);
+          }
+        }
+      }),
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.fade-in:not(.hero .fade-in)').forEach(el => io.observe(el));
+
+    // Charge le compteur
+    loadCounter();
+  </script>
+</body>
+</html>

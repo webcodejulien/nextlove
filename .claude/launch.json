@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "premium-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/durieujulien/NextLove/assets", "-p", "8099", "--no-clipboard"],
+      "port": 8099,
+      "autoPort": true
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+APPLE REVIEW NOTES — NextLove
+Bundle ID: com.nextlove.app
+Version: 1.0.0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TEST ACCOUNT CREDENTIALS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+We have created a dedicated demo account for your review:
+
+Email:    reviewer@nextlove.app
+Password: AppleReview2026!
+
+This account has a fully completed compatibility questionnaire and an active Gold subscription so you can review all paid features without making a purchase.
+
+Alternatively, you can create a fresh account using any email address. The onboarding flow (signup → email verification → questionnaire → discover) takes approximately 3 minutes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SIMULATED PROFILES (BOT ACCOUNTS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+To ensure that new users have a positive first experience and see real matches right away, we have pre-seeded the platform with 26 simulated profiles (15 female, 10 male, 1 non-binary). These profiles:
+
+- Have fully completed questionnaires and realistic bio descriptions
+- Use stock photos licensed for app use
+- Do NOT send messages or initiate contact
+- Are clearly part of our moderated seed dataset, not real users impersonating individuals
+- Will be progressively replaced by real users as the platform grows
+
+This practice is common and necessary for early-stage dating apps to prevent the "empty app" problem that discourages genuine user sign-ups. All simulated profiles are disclosed in our Terms of Service.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IN-APP PURCHASES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NextLove offers a single auto-renewable subscription:
+
+Product: NextLove Gold
+Price: €9.99 / month
+Product ID: com.nextlove.app.gold_monthly
+
+Gold features unlocked:
+- Unlimited daily likes (free tier: 10 likes/day)
+- See the list of users who liked your profile
+- Super Likes (stand out to a user)
+- 30-minute profile Boost (appear at top of discover feed)
+- Full advanced filter controls
+- Ad-free experience
+- Gold badge displayed on profile
+
+The test account provided above already has Gold activated. To test the purchase flow itself, please create a new account and use a Sandbox Apple ID.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ADMOB REWARDED ADS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Rewarded video ads (via Google AdMob) are shown ONLY when a free-tier user has exhausted their 10 daily likes. A prompt appears offering the user the option to watch a short video ad in exchange for 5 additional likes.
+
+- Ads are never shown unsolicited or interstitially
+- The user must actively tap "Watch a video" to trigger the ad
+- Gold subscribers never see any ads
+- During review, AdMob may serve test ads or no ads depending on the build environment; this does not affect app functionality
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ADDITIONAL NOTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- The app requires users to be 18+ (enforced at sign-up via date of birth)
+- Users can report or block any profile from within the chat or profile view
+- Users can delete their account at any time from the Profile settings screen
+- All data is stored on Supabase infrastructure hosted in EU data centers (GDPR compliant)
+- The AI compatibility scoring runs locally as a fallback if the Anthropic API is unavailable, ensuring uninterrupted service
+
+Thank you for reviewing NextLove. Please contact us at support@nextlove.app if you need any additional information.
