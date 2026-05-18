@@ -19,9 +19,7 @@ import { userService, User, UserLocation, blockService, reportService, profileVi
 import PhotoViewer from '../../components/PhotoViewer';
 import { useApp } from '../../contexts/AppContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { computeDetailedScore, ThemeScore } from '../../services/questionnaireScore';
 import { formatLastSeen } from '../../utils/time';
-import RadarChart, { RadarAxis } from '../../components/RadarChart';
 import { PROMPTS } from '../../constants/prompts';
 
 const { width } = Dimensions.get('window');
@@ -190,48 +188,11 @@ const traitS = StyleSheet.create({
   fill: { height: '100%', borderRadius: 3 },
 });
 
-// ─── Score par thème ──────────────────────────────────────────────────────────
-
-function ThemeScoreRow({ theme }: { theme: ThemeScore }) {
-  const color = theme.score >= 80 ? Colors.success : theme.score >= 60 ? '#FFC107' : Colors.danger;
-  return (
-    <View style={themeS.row}>
-      <Text style={themeS.emoji}>{theme.emoji}</Text>
-      <View style={themeS.content}>
-        <View style={themeS.header}>
-          <Text style={themeS.name}>{theme.theme}</Text>
-          <Text style={[themeS.score, { color }]}>{theme.score}%</Text>
-        </View>
-        <View style={themeS.track}>
-          <LinearGradient
-            colors={theme.score >= 80 ? [Colors.success, '#00BFA5'] : theme.score >= 60 ? ['#FFC107', '#FF9800'] : [Colors.danger, '#FF1744']}
-            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-            style={[themeS.fill, { width: `${theme.score}%` as any }]}
-          />
-        </View>
-        <Text style={themeS.detail}>{theme.detail}</Text>
-      </View>
-    </View>
-  );
-}
-
-const themeS = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'flex-start', gap: 12, paddingBottom: 12, borderBottomWidth: 1, borderBottomColor: Colors.cardBorder },
-  emoji: { fontSize: 20, marginTop: 2 },
-  content: { flex: 1, gap: 6 },
-  header: { flexDirection: 'row', justifyContent: 'space-between' },
-  name: { color: Colors.text, fontSize: 14, fontWeight: '700' },
-  score: { fontSize: 14, fontWeight: '800' },
-  track: { height: 5, borderRadius: 3, backgroundColor: Colors.surface, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: 3 },
-  detail: { color: Colors.textMuted, fontSize: 11 },
-});
-
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 
 export default function ProfileDetailScreen() {
-  const { userId, matchId, name, photo, score, bio: paramBio, job: paramJob, education: paramEducation, location: paramLocation } = useLocalSearchParams<{
-    userId: string; matchId?: string; name?: string; photo?: string; score?: string;
+  const { userId, matchId, name, photo, bio: paramBio, job: paramJob, education: paramEducation, location: paramLocation } = useLocalSearchParams<{
+    userId: string; matchId?: string; name?: string; photo?: string;
     bio?: string; job?: string; education?: string; location?: string;
   }>();
 
@@ -239,20 +200,12 @@ export default function ProfileDetailScreen() {
   const { user: authUser } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [themeScores, setThemeScores] = useState<ThemeScore[]>([]);
   const [isBlocked, setIsBlocked] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
     userService.getById(userId).then(u => {
       setUser(u);
-      // Calcul score détaillé si on a les deux questionnaires
-      if (u?.questionnaire_data && questionnaire?.attachment) {
-        try {
-          const detailed = computeDetailedScore(questionnaire, u.questionnaire_data);
-          setThemeScores(detailed.themes);
-        } catch {}
-      }
     }).catch(() => setUser(null)).finally(() => setLoading(false));
 
     // Enregistre la vue de profil (best effort, silencieux)
@@ -267,7 +220,6 @@ export default function ProfileDetailScreen() {
   const [photoViewerOpen, setPhotoViewerOpen] = useState(false);
   const displayName = user?.name ?? name ?? '';
   const city = (user?.location as UserLocation | undefined)?.city ?? paramLocation ?? '';
-  const compatScore = score ? parseInt(score) : null;
   const q = user?.questionnaire_data;
   // Fallbacks depuis les params de navigation quand user n'est pas encore chargé
   const displayBio = user?.about ?? paramBio ?? '';
@@ -427,43 +379,8 @@ export default function ProfileDetailScreen() {
                   <Text style={styles.heroCity}>{q.job}</Text>
                 </View>
               )}
-              {compatScore && (
-                <View style={styles.scoreChip}>
-                  <Ionicons name="sparkles" size={14} color={Colors.premium} />
-                  <Text style={styles.scoreText}>{compatScore}% compatibilité</Text>
-                </View>
-              )}
             </View>
           </View>
-
-          {/* Score de compatibilité compact */}
-          {compatScore !== null && compatScore > 0 && (
-            <View style={styles.scoreBannerWrap}>
-              <LinearGradient
-                colors={
-                  compatScore >= 80
-                    ? ['rgba(0,230,118,0.15)', 'rgba(0,230,118,0.05)']
-                    : compatScore >= 60
-                    ? ['rgba(255,193,7,0.15)', 'rgba(255,193,7,0.05)']
-                    : ['rgba(255,82,82,0.15)', 'rgba(255,82,82,0.05)']
-                }
-                style={styles.scoreBanner}
-              >
-                <View style={styles.scoreBannerLeft}>
-                  <Ionicons name="sparkles" size={22} color={compatScore >= 80 ? Colors.success : compatScore >= 60 ? Colors.warning : Colors.danger} />
-                  <View>
-                    <Text style={styles.scoreBannerLabel}>Compatibilité</Text>
-                    <Text style={styles.scoreBannerSub}>
-                      {compatScore >= 80 ? 'Excellent match 🔥' : compatScore >= 60 ? 'Bonne affinité ✨' : 'Profils différents'}
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[styles.scoreBannerValue, {
-                  color: compatScore >= 80 ? Colors.success : compatScore >= 60 ? Colors.warning : Colors.danger
-                }]}>{compatScore}%</Text>
-              </LinearGradient>
-            </View>
-          )}
 
 
           {/* Prompts de profil */}
@@ -768,14 +685,6 @@ const styles = StyleSheet.create({
   heroOnlineText: { fontSize: 11, fontWeight: '700' },
   heroLocation: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   heroCity: { color: Colors.textMuted, fontSize: 13 },
-  scoreChip: {
-    flexDirection: 'row', alignItems: 'center', gap: 6,
-    backgroundColor: 'rgba(255,215,0,0.15)', borderRadius: 20,
-    paddingHorizontal: 12, paddingVertical: 6,
-    borderWidth: 1, borderColor: 'rgba(255,215,0,0.3)',
-    alignSelf: 'flex-start',
-  },
-  scoreText: { color: Colors.premium, fontSize: 13, fontWeight: '700' },
   positiveChip: {
     backgroundColor: 'rgba(0,230,118,0.12)',
     borderRadius: 20,
@@ -789,20 +698,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-  scoreBannerWrap: { marginHorizontal: 16, marginBottom: 12 },
-  scoreBanner: {
-    borderRadius: 18,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-  },
-  scoreBannerLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  scoreBannerLabel: { color: Colors.text, fontSize: 15, fontWeight: '700' },
-  scoreBannerSub: { color: Colors.textMuted, fontSize: 12, marginTop: 2 },
-  scoreBannerValue: { fontSize: 36, fontWeight: '900' },
   bio: { color: Colors.textSecondary, fontSize: 14, lineHeight: 22 },
   promptCard: {
     marginHorizontal: 16,
@@ -829,15 +724,6 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: 'rgba(255,107,157,0.25)',
   },
   promptReplyText: { color: Colors.primary, fontSize: 12, fontWeight: '700' },
-  radarWrap: { alignItems: 'center', paddingVertical: 8 },
-  radarLegend: { gap: 8, marginTop: 8 },
-  radarLegendItem: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  radarEmoji: { fontSize: 16, width: 24 },
-  radarLegendBar: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
-  radarThemeName: { color: Colors.textSecondary, fontSize: 11, fontWeight: '600', width: 70 },
-  radarLegendTrack: { flex: 1, height: 5, borderRadius: 3, backgroundColor: Colors.surface, overflow: 'hidden' },
-  radarLegendFill: { height: '100%', borderRadius: 3 },
-  radarLegendScore: { fontSize: 12, fontWeight: '700', minWidth: 36, textAlign: 'right' },
   chipsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   subLabel: { color: Colors.textMuted, fontSize: 11, fontWeight: '600', marginBottom: 6, textTransform: 'uppercase' },
   tagsInline: { color: Colors.textSecondary, fontSize: 13 },

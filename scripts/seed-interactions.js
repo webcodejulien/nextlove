@@ -17,29 +17,52 @@ const REAL_USER_ID = '3ab27f56-5f05-456b-b968-cc411cc95dc5';
 
 const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-// Groupes de 4 photos par "persona" (même genre, indices proches = ressemblance visuelle)
-// Chaque groupe simule les 4 photos d'une même personne
-const FEMALE_PHOTO_GROUPS = [
-  [2, 3, 4, 5], [10, 11, 12, 13], [20, 21, 22, 23], [30, 31, 32, 33],
-  [40, 41, 42, 43], [50, 51, 52, 53], [60, 61, 62, 63], [70, 71, 72, 73],
-  [0, 1, 6, 7],   [14, 15, 16, 17], [24, 25, 26, 27], [34, 35, 36, 37],
-  [44, 45, 46, 47],[54, 55, 56, 57], [64, 65, 66, 67], [74, 75, 76, 77],
-  [8, 9, 18, 19],  [28, 29, 38, 39], [48, 49, 58, 59], [68, 69, 78, 79],
+// 4 photos par bot = même ID Unsplash, crops différents → photos cohérentes de la même personne
+const FEMALE_UNSPLASH_IDS = [
+  '1494790108377-be9c29b29330', '1529626455594-4ff0802cfb7e', '1531746020798-e6953c6e8e04',
+  '1544005313-94ddf0286df2', '1558203728-00f45afa2c82', '1534528741775-53994a69daeb',
+  '1573496359142-b8d87734a5a2', '1580489944761-15a19d674349', '1520813792240-56fc4a3765a7',
+  '1509967419530-da38b4704bc6', '1508214751196-bcfd4ca60f91', '1499155286265-d5a3c37c594e',
+  '1488426862026-3ee34a7d66df', '1487412720507-e7ab37603c6f', '1438761681033-6461ffad8d80',
+  '1505033575518-a36ea2ef75ae', '1468228711308-5d89bd4c5e30', '1489424731084-a5d8b950d169',
+  '1582152629442-206f6f5b0718', '1581824043583-6904b080a19c',
+  '1570295999919-56ceb5ecca61', '1551836022-d5d88e9218df', '1546961342-ea5f73db4f42',
+  '1552058711-9ab6a56b4543', '1554151228-14d9def656e4', '1550525811-e5539e7a0935',
+  '1607746882042-944635dfe10e', '1599842057874-6b8e2c9f9ad2', '1614644147798-f8c0fc9da7f6',
+  '1609010697446-11f2b9b5f5d8', '1567532939604-b6b5b0db2604', '1586297135537-9b5cfd5e6714',
+  '1598550874175-4d0ef436c909', '1601412436518-3c5fba9b32b9', '1534180477871-5d6cc81f3920',
+  '1542206395-9eb3ec557bd6', '1546961342-ea5f73db4f42', '1524502397800-2eeaad7c3fe5',
+  '1504703395235-85f4937b2520', '1613410853065-2e9ab461703c',
+  '1517841905240-472988babdf9', '1494790108377-be9c29b29330', '1529626455594-4ff0802cfb7e',
+  '1531746020798-e6953c6e8e04', '1544005313-94ddf0286df2', '1558203728-00f45afa2c82',
+  '1534528741775-53994a69daeb', '1573496359142-b8d87734a5a2', '1580489944761-15a19d674349',
+  '1520813792240-56fc4a3765a7',
 ];
 
-const MALE_PHOTO_GROUPS = [
-  [2, 3, 4, 5], [10, 11, 12, 13], [20, 21, 22, 23], [30, 31, 32, 33],
-  [40, 41, 42, 43], [50, 51, 52, 53], [60, 61, 62, 63], [70, 71, 72, 73],
-  [0, 1, 6, 7],   [14, 15, 16, 17], [24, 25, 26, 27], [34, 35, 36, 37],
-  [44, 45, 46, 47],[54, 55, 56, 57], [64, 65, 66, 67], [74, 75, 76, 77],
-  [8, 9, 18, 19],  [28, 29, 38, 39], [48, 49, 58, 59], [68, 69, 78, 79],
+const MALE_UNSPLASH_IDS = [
+  '1507003211169-0a1dd7228f2d', '1500648767791-00dcc994a43e', '1472099645785-5658abf4ff4e',
+  '1463453091185-61582044d556', '1480455624526-28d9f5f6e57f', '1519085360753-af0119f7cbe7',
+  '1531427186611-ed533b990b4b', '1506794778202-cad84cf45f1d', '1492562080023-ab3db95bfbce',
+  '1522556189639-2f4af8b0958f', '1500648767791-00dcc994a43e', '1507003211169-0a1dd7228f2d',
+  '1472099645785-5658abf4ff4e', '1463453091185-61582044d556', '1480455624526-28d9f5f6e57f',
+  '1519085360753-af0119f7cbe7', '1531427186611-ed533b990b4b', '1506794778202-cad84cf45f1d',
+  '1492562080023-ab3db95bfbce', '1522556189639-2f4af8b0958f',
+  '1560250097-0b93528c311a', '1566492031773-4f4e44671857', '1607990281366-20a57c8b4861',
+  '1611498602461-4f63c8386f4f', '1615920186527-09882b8e5e33', '1618077360395-b09c4bcf8ac6',
+  '1624395149393-ef9bed5e7c4e', '1628157588553-5ecdced3032f', '1629425703699-afae30249604',
+  '1633332755192-727a05c4013d',
 ];
 
-function randomPhotoUrls(gender, groupIndex) {
-  const groups = gender === 'female' ? FEMALE_PHOTO_GROUPS : MALE_PHOTO_GROUPS;
-  const type = gender === 'female' ? 'women' : 'men';
-  const group = groups[groupIndex % groups.length];
-  return group.map(i => `https://randomuser.me/api/portraits/${type}/${i}.jpg`);
+function getPersonaPhotos(gender, index) {
+  const ids = gender === 'female' ? FEMALE_UNSPLASH_IDS : MALE_UNSPLASH_IDS;
+  const id = ids[index % ids.length];
+  const base = `https://images.unsplash.com/photo-${id}`;
+  return [
+    `${base}?w=600&h=800&fit=crop&crop=faces&auto=format&q=80`,
+    `${base}?w=600&h=750&fit=crop&crop=top&auto=format&q=80`,
+    `${base}?w=500&h=700&fit=crop&crop=face&auto=format&q=80`,
+    `${base}?w=600&h=900&fit=crop&auto=format&q=80`,
+  ];
 }
 
 function randomDate(daysAgo) {
@@ -83,7 +106,7 @@ async function main() {
   for (let i = 0; i < allBots.length; i++) {
     const bot = allBots[i];
     const gender = bot.gender === 'male' ? 'male' : 'female';
-    const photos = randomPhotoUrls(gender, i);
+    const photos = getPersonaPhotos(gender, i);
 
     await supabase.from('users').update({ photos }).eq('id', bot.id);
     photoCount++;
