@@ -566,13 +566,22 @@ export default function DiscoverScreen() {
   const handleWatchAd = async () => {
     setWatchingAd(true);
     try {
-      const { showRewardedAd, addBonusLikes, LIKES_PER_VIDEO } = await import('../../services/adService');
+      const { showRewardedAd, addBonusLikes } = await import('../../services/adService');
       const rewarded = await showRewardedAd();
       if (rewarded) {
         const newTotal = await addBonusLikes();
         setRemainingLikes(newTotal);
+      } else {
+        // Aucune pub disponible pour l'instant
+        Alert.alert(
+          'Pub non disponible',
+          'Aucune publicité disponible pour le moment. Réessaie dans quelques minutes.',
+          [{ text: 'OK' }]
+        );
       }
-    } catch {}
+    } catch {
+      Alert.alert('Erreur', 'Une erreur est survenue. Réessaie dans quelques instants.');
+    }
     setWatchingAd(false);
   };
 

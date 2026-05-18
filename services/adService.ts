@@ -94,7 +94,7 @@ export async function addBonusLikes(count = LIKES_PER_VIDEO): Promise<number> {
 export async function showRewardedAd(): Promise<boolean> {
   try {
     // Essaie d'importer AdMob (disponible seulement en build natif)
-    const { RewardedAd, RewardedAdEventType, TestIds } = await import(
+    const { RewardedAd, RewardedAdEventType, AdEventType } = await import(
       'react-native-google-mobile-ads'
     );
 
@@ -104,31 +104,43 @@ export async function showRewardedAd(): Promise<boolean> {
       });
 
       let rewardEarned = false;
+      const unsubs: (() => void)[] = [];
 
-      const unsubEarned = rewarded.addAdEventListener(
+      // Timeout de sécurité : 15s max, sinon on résout à false
+      const timeout = setTimeout(() => {
+        unsubs.forEach(fn => fn());
+        resolve(false);
+      }, 15000);
+
+      const cleanup = (result: boolean) => {
+        clearTimeout(timeout);
+        unsubs.forEach(fn => fn());
+        resolve(result);
+      };
+
+      // Récompense obtenue
+      unsubs.push(rewarded.addAdEventListener(
         RewardedAdEventType.EARNED_REWARD,
         () => { rewardEarned = true; }
-      );
+      ));
 
-      const unsubClosed = rewarded.addAdEventListener(
-        RewardedAdEventType.LOADED, // fallback — dismissed handled via EARNED_REWARD
-        () => {}
-      );
+      // Pub fermée → on résout avec le résultat
+      unsubs.push(rewarded.addAdEventListener(
+        AdEventType.CLOSED,
+        () => cleanup(rewardEarned)
+      ));
 
-      // On écoute la fermeture via l'événement générique
-      rewarded.addAdEventListener('closed' as any, () => {
-        unsubEarned();
-        unsubClosed();
-        resolve(rewardEarned);
-      });
+      // Erreur → on résout à false proprement
+      unsubs.push(rewarded.addAdEventListener(
+        AdEventType.ERROR,
+        () => cleanup(false)
+      ));
 
-      const unsubLoaded = rewarded.addAdEventListener(
+      // Pub chargée → on l'affiche
+      unsubs.push(rewarded.addAdEventListener(
         RewardedAdEventType.LOADED,
-        () => {
-          unsubLoaded();
-          rewarded.show();
-        }
-      );
+        () => { rewarded.show(); }
+      ));
 
       rewarded.load();
     });
