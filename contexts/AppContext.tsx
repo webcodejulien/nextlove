@@ -86,7 +86,7 @@ function userToProfile(u: User): Profile {
       family: q ? Math.round(q.familyImportance) : 5,
       values: q ? Math.round(q.honestyLevel) : 5,
       travel: q?.dominantTrait === 'adventurer' ? 9 : 5,
-      lifestyle: q ? Math.round((q.humorLevel + q.ambitionLevel) / 2) : 5,
+      lifestyle: q ? Math.round(q.ambitionLevel) : 5,
       ambition: q ? Math.round(q.ambitionLevel) : 5,
     },
     lastSeen: u.last_seen ?? null,
@@ -103,7 +103,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const userId = user?.id ?? null;
 
-  const [language, setLanguage] = useState<Language>('FR');
+  const language: Language = 'FR'; const setLanguage = (_: Language) => {};
   const [isPremium, setPremium] = useState(false);
   const [matches, setMatches] = useState<Profile[]>([]);
   const [likedIds, setLikedIds] = useState<string[]>([]);

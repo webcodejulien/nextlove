@@ -20,7 +20,7 @@ export interface QuestionnaireAnswers {
   loveLanguage: string;         // words | acts | gifts | time | touch
   communication: string;        // direct | diplomatic | emotional | factual
   attachment: string;           // secure | anxious | avoidant
-  humorLevel: number;           // 1-10
+  humorType: string;
   conflictStyle: string;        // talk_asap | cool_down | write | avoid
   lovePersonality: string;      // passionate | tender | playful | serious
 
@@ -82,12 +82,11 @@ export interface QuestionnaireAnswers {
   appearanceImportance: number;
   partnerEducation: string;
   partnerAmbition: number;      // 1-10
-  partnerHumor: number;         // 1-10
+  partnerHumorType: string;
   childrenOk: string;
 
   // ── Étape 10 : Deal-breakers ──────────────────────────────
   dealBreakers: string[];
-  absoluteValues: string[];     // valeurs non-négociables
 }
 
 // ============================================================
@@ -101,7 +100,7 @@ export const DEFAULT_ANSWERS: QuestionnaireAnswers = {
 
   // Personnalité
   personality: '', dominantTrait: '', loveLanguage: '',
-  communication: '', attachment: '', humorLevel: 7,
+  communication: '', attachment: '', humorType: '',
   conflictStyle: '', lovePersonality: '',
 
   // Valeurs
@@ -134,10 +133,10 @@ export const DEFAULT_ANSWERS: QuestionnaireAnswers = {
   // Critères partenaire
   partnerAgeMin: 22, partnerAgeMax: 38, maxDistance: 100,
   appearanceImportance: 6, partnerEducation: '',
-  partnerAmbition: 6, partnerHumor: 7, childrenOk: '',
+  partnerAmbition: 6, partnerHumorType: '', childrenOk: '',
 
   // Deal-breakers
-  dealBreakers: [], absoluteValues: [],
+  dealBreakers: [],
 };
 
 // ============================================================
@@ -468,15 +467,24 @@ export const DEAL_BREAKER_OPTIONS: ChipOption[] = [
   { label: 'Religion incompatible',  value: 'religion_clash',   emoji: '⛪' },
   { label: 'Jalousie excessive',     value: 'jealousy',         emoji: '😤' },
   { label: 'Pas d\'ambition',        value: 'no_ambition',      emoji: '😴' },
+  { label: 'Manipulateur(trice)', value: 'manipulative',    emoji: '🎭' },
+  { label: 'Trop possessif(ve)',  value: 'possessive',      emoji: '🔗' },
+  { label: 'Pas de sport',       value: 'inactive',         emoji: '🛋️' },
+  { label: 'Violence verbale',   value: 'verbal_violence',  emoji: '💢' },
+  { label: 'Narcissisme',        value: 'narcissism',       emoji: '🪞' },
+  { label: 'Incompatibilité sexuelle', value: 'sexual_incomp', emoji: '🔥' },
+  { label: 'Pas de projet commun', value: 'no_project',    emoji: '🗺️' },
+  { label: 'Différence d\'âge',  value: 'age_gap',          emoji: '⏳' },
+  { label: 'Problèmes financiers', value: 'financial_issues', emoji: '💸' },
+  { label: 'Hygiène insuffisante', value: 'hygiene',        emoji: '🧼' },
 ];
 
-export const ABSOLUTE_VALUES_OPTIONS: ChipOption[] = [
-  { label: 'Honnêteté absolue',  value: 'honesty',     emoji: '💯' },
-  { label: 'Fidélité',           value: 'fidelity',    emoji: '🔒' },
-  { label: 'Respect mutuel',     value: 'respect',     emoji: '🤝' },
-  { label: 'Communication',      value: 'communication', emoji: '💬' },
-  { label: 'Indépendance',       value: 'independence', emoji: '🦋' },
-  { label: 'Famille en priorité', value: 'family',     emoji: '👨‍👩‍👧' },
-  { label: 'Croissance perso',   value: 'growth',      emoji: '🌱' },
-  { label: 'Stabilité émotionnelle', value: 'stability', emoji: '⚓' },
+export const HUMOR_TYPE_OPTIONS: ChipOption[] = [
+  { label: '1er degré',        value: 'first_degree',  emoji: '😊' },
+  { label: '2ème degré',       value: 'second_degree', emoji: '😏' },
+  { label: 'Humour noir',      value: 'dark',          emoji: '🖤' },
+  { label: 'Absurde',          value: 'absurd',        emoji: '🤪' },
+  { label: 'Piquant / Sarc.',  value: 'sarcastic',     emoji: '😈' },
+  { label: 'Blagues de papa',  value: 'dad_jokes',     emoji: '🧔' },
+  { label: 'Peu d\'humour',    value: 'serious',       emoji: '🧐' },
 ];

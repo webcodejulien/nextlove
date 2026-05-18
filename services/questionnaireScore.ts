@@ -84,7 +84,8 @@ function scorePersonality(a: QuestionnaireAnswers, b: QuestionnaireAnswers): The
     s.push([CONFLICT_COMPAT[a.conflictStyle]?.[b.conflictStyle] ?? 60, 2.5]);
   if (a.lovePersonality && b.lovePersonality)
     s.push([a.lovePersonality === b.lovePersonality ? 85 : 70, 1]);
-  s.push([numericCompat(a.humorLevel, b.humorLevel, 4), 1.5]);
+  if (a.humorType && b.humorType)
+    s.push([a.humorType === b.humorType ? 90 : 60, 1.5]);
 
   const score = weighted(s);
   return { theme: 'Personnalité', emoji: '🧠', score,

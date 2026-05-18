@@ -73,7 +73,7 @@ import {
   PARTNER_EDUCATION_OPTIONS,
   // Étape 10
   DEAL_BREAKER_OPTIONS,
-  ABSOLUTE_VALUES_OPTIONS,
+  HUMOR_TYPE_OPTIONS,
 } from '../constants/questionnaire';
 import {
   computeRealtimeScore,
@@ -464,11 +464,10 @@ function Step1({ answers, update }: StepProps) {
         />
       </SectionCard>
       <SectionCard title="Humour">
-        <StepSlider
-          label="Niveau d'humour"
-          value={answers.humorLevel}
-          onChange={v => update('humorLevel', v)}
-          showLabels={['Sérieux', 'Très drôle']}
+        <ChipGroup
+          options={HUMOR_TYPE_OPTIONS}
+          selected={answers.humorType}
+          onSelect={v => update('humorType', v)}
         />
       </SectionCard>
     </View>
@@ -908,12 +907,6 @@ function Step8({ answers, update }: StepProps) {
           onChange={v => update('partnerAmbition', v)}
           showLabels={['Serein(e)', 'Très ambitieux(se)']}
         />
-        <StepSlider
-          label="Humour du partenaire"
-          value={answers.partnerHumor}
-          onChange={v => update('partnerHumor', v)}
-          showLabels={['Sérieux', 'Très drôle']}
-        />
       </SectionCard>
     </View>
   );
@@ -937,7 +930,7 @@ function Step9({ answers, update }: StepProps) {
           Sélectionnez les situations que vous ne pouvez absolument pas accepter dans une relation.
         </Text>
       </View>
-      <SectionCard title="🚩 Mes red flags (éliminatoires)">
+      <SectionCard title="🚩 Mes critères éliminatoires">
         <ChipGroup
           options={DEAL_BREAKER_OPTIONS}
           selected={answers.dealBreakers}
@@ -955,24 +948,13 @@ function Step9({ answers, update }: StepProps) {
           </LinearGradient>
         </View>
       )}
-      <SectionCard title="Valeurs absolues (non-négociables)">
+      <SectionCard title="Humour du partenaire">
         <ChipGroup
-          options={ABSOLUTE_VALUES_OPTIONS}
-          selected={answers.absoluteValues}
-          onSelect={v => toggleMulti('absoluteValues', v)}
-          multi
+          options={HUMOR_TYPE_OPTIONS}
+          selected={answers.partnerHumorType}
+          onSelect={v => update('partnerHumorType', v)}
         />
       </SectionCard>
-      {answers.absoluteValues.length > 0 && (
-        <View style={styles.dealBreakerCount}>
-          <LinearGradient colors={['rgba(255,215,64,0.12)', 'rgba(255,215,64,0.06)']} style={[styles.dealBreakerCountInner, { borderColor: 'rgba(255,215,64,0.25)' }]}>
-            <Ionicons name="star" size={16} color={Colors.warning} />
-            <Text style={[styles.dealBreakerCountText, { color: Colors.warning }]}>
-              {answers.absoluteValues.length} valeur{answers.absoluteValues.length > 1 ? 's' : ''} fondamentale{answers.absoluteValues.length > 1 ? 's' : ''}
-            </Text>
-          </LinearGradient>
-        </View>
-      )}
     </View>
   );
 }

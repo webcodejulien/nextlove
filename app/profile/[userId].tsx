@@ -45,6 +45,16 @@ const DEALBREAKER_LABELS: Record<string, string> = {
   religion_clash: 'Religion incompatible',
   jealousy: 'Jalousie excessive',
   no_ambition: 'Pas d\'ambition',
+  manipulative: 'Manipulateur(trice)',
+  possessive: 'Trop possessif(ve)',
+  inactive: 'Pas de sport',
+  verbal_violence: 'Violence verbale',
+  narcissism: 'Narcissisme',
+  sexual_incomp: 'Incompatibilité sexuelle',
+  no_project: 'Pas de projet commun',
+  age_gap: 'Différence d\'âge',
+  financial_issues: 'Problèmes financiers',
+  hygiene: 'Hygiène insuffisante',
 };
 
 function educationLabel(v?: string) {
@@ -455,39 +465,6 @@ export default function ProfileDetailScreen() {
             </View>
           )}
 
-          {/* Radar chart compatibilité */}
-          {themeScores.length >= 3 && (
-            <SectionCard title="🎯 Compatibilité par thème">
-              <View style={styles.radarWrap}>
-                <RadarChart
-                  axes={themeScores.slice(0, 6).map(t => ({
-                    label: t.theme,
-                    emoji: t.emoji,
-                    value: t.score,
-                  }) as RadarAxis)}
-                  size={220}
-                  color={Colors.primary}
-                />
-              </View>
-              <View style={styles.radarLegend}>
-                {themeScores.slice(0, 6).map(t => {
-                  const color = t.score >= 80 ? Colors.success : t.score >= 60 ? Colors.warning : Colors.danger;
-                  return (
-                    <View key={t.theme} style={styles.radarLegendItem}>
-                      <Text style={styles.radarEmoji}>{t.emoji}</Text>
-                      <View style={styles.radarLegendBar}>
-                        <Text style={styles.radarThemeName}>{t.theme}</Text>
-                        <View style={styles.radarLegendTrack}>
-                          <View style={[styles.radarLegendFill, { width: `${t.score}%` as any, backgroundColor: color }]} />
-                        </View>
-                        <Text style={[styles.radarLegendScore, { color }]}>{t.score}%</Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            </SectionCard>
-          )}
 
           {/* Prompts de profil */}
           {user?.profile_prompts && (user.profile_prompts as any[]).length > 0 && (
@@ -542,7 +519,15 @@ export default function ProfileDetailScreen() {
                   q.conflictStyle === 'write' ? '✉️ Préfère écrire' : '🙈 Évite le conflit'
                 } />}
               </View>
-              {q?.humorLevel && <TraitBar label="Humour" value={q.humorLevel} emoji="😄" />}
+              {q?.humorType && <InfoChip icon="happy-outline" label={(() => {
+                const m: Record<string,string> = {
+                  first_degree: '😊 1er degré', second_degree: '😏 2ème degré',
+                  dark: '🖤 Humour noir', absurd: '🤪 Absurde',
+                  sarcastic: '😈 Piquant', dad_jokes: '🧔 Blagues de papa',
+                  serious: '🧐 Peu d\'humour',
+                };
+                return m[q.humorType] ?? q.humorType;
+              })()} />}
               {q?.affectionLevel && <TraitBar label="Affection" value={q.affectionLevel} emoji="🤗" />}
             </SectionCard>
           )}
@@ -667,37 +652,10 @@ export default function ProfileDetailScreen() {
             </SectionCard>
           )}
 
-          {/* Ce qu'il/elle aime — synthèse positive */}
-          {(() => {
-            const positives: string[] = [];
-            if (q?.hobbies?.length) positives.push(...q.hobbies.slice(0, 4));
-            if (q?.coreValues?.length) positives.push(...q.coreValues.slice(0, 3).map((v: string) => {
-              const map: Record<string,string> = { honesty: 'Honnêteté', fidelity: 'Fidélité', respect: 'Respect', communication: 'Communication', independence: 'Indépendance', family: 'Famille', growth: 'Épanouissement', stability: 'Stabilité' };
-              return map[v] ?? v;
-            }));
-            if (q?.musicGenres?.length) positives.push(...q.musicGenres.slice(0, 2));
-            if (user?.values?.length) positives.push(...(user.values as string[]).filter((v: string) =>
-              !v.includes('_') && v.length > 1 &&
-              !v.match(/[Aa]lcool|[Ii]nfidél|[Ff]umeur|[Tt]romperie|[Jj]aloux|[Vv]iolence|[Mm]anipu|[Tt]oxique|[Dd]ominant|[Pp]assé|[Ff]réquent|[Aa]lcoolisme/)
-            ).slice(0, 4));
-            if (positives.length === 0) return null;
-            const unique = [...new Set(positives)].slice(0, 8);
-            return (
-              <SectionCard title="✨ Ce qu'il/elle aime">
-                <View style={styles.chipsWrap}>
-                  {unique.map((item, i) => (
-                    <View key={i} style={styles.positiveChip}>
-                      <Text style={styles.positiveChipText}>{item}</Text>
-                    </View>
-                  ))}
-                </View>
-              </SectionCard>
-            );
-          })()}
 
           {/* Red flags */}
           {q?.dealBreakers && q.dealBreakers.length > 0 && (
-            <SectionCard title="🚩 Red flags">
+            <SectionCard title="🚩 Ce qu'il/elle ne tolère pas">
               <View style={styles.chipsWrap}>
                 {q.dealBreakers.map((v, i) => (
                   <View key={i} style={styles.dealChip}>

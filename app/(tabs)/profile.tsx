@@ -539,52 +539,6 @@ export default function ProfileScreen() {
           <View style={styles.settingsSection}>
             <Text style={styles.sectionLabel}>Préférences</Text>
             <LinearGradient colors={Colors.gradientCard} style={styles.settingsCard}>
-              {/* Language */}
-              <View style={styles.langSection}>
-                <View style={settingStyles.row}>
-                  <View style={settingStyles.left}>
-                    <View style={settingStyles.iconBg}>
-                      <Ionicons name="language-outline" size={16} color={Colors.primary} />
-                    </View>
-                    <Text style={settingStyles.label}>{t.languageLabel}</Text>
-                  </View>
-                </View>
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.langScroll}
-                >
-                  {LANGUAGES.map(lang => (
-                    <TouchableOpacity
-                      key={lang.code}
-                      onPress={() => setLanguage(lang.code)}
-                      style={[
-                        styles.langChip,
-                        language === lang.code && styles.langChipActive,
-                      ]}
-                    >
-                      {language === lang.code && (
-                        <LinearGradient
-                          colors={Colors.gradientPrimary}
-                          style={StyleSheet.absoluteFill}
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                        />
-                      )}
-                      <Text style={styles.langFlag}>{lang.flag}</Text>
-                      <Text
-                        style={[
-                          styles.langName,
-                          language === lang.code && styles.langNameActive,
-                        ]}
-                      >
-                        {lang.code}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-
               <SettingRow
                 icon="notifications-outline"
                 label={t.notifications}
