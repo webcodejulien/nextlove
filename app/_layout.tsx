@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Stack, useSegments, router } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { AppProvider } from '../contexts/AppContext';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import { NotificationProvider } from '../contexts/NotificationContext';
@@ -12,6 +12,24 @@ import { setupNotificationHandler } from '../services/notificationService';
 
 // Configure notification display behaviour as early as possible
 setupNotificationHandler();
+
+// ── Initialisation AdMob + ATT ────────────────────────────────────────────────
+async function initAdMob() {
+  try {
+    // 1. Demander ATT sur iOS 14+ (obligatoire pour les pubs)
+    if (Platform.OS === 'ios') {
+      const { requestTrackingPermissionsAsync } = await import('expo-tracking-transparency');
+      await requestTrackingPermissionsAsync();
+    }
+    // 2. Initialiser AdMob (obligatoire avant toute requête de pub)
+    const mobileAds = (await import('react-native-google-mobile-ads')).default;
+    await mobileAds().initialize();
+  } catch (e) {
+    // Ne pas crasher si AdMob non dispo
+  }
+}
+
+initAdMob();
 
 function RootLayoutNav() {
   const { session, loading } = useAuth();

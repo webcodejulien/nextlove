@@ -47,6 +47,7 @@ module.exports = {
         NSCameraUsageDescription: 'NextLove utilise votre appareil photo pour prendre une photo de profil.',
         NSPhotoLibraryUsageDescription: 'NextLove accède à votre galerie pour choisir une photo de profil.',
         NSMicrophoneUsageDescription: 'Accès microphone non utilisé.',
+        NSUserTrackingUsageDescription: 'NextLove utilise vos données pour vous afficher des publicités pertinentes et améliorer votre expérience.',
         GADApplicationIdentifier: admobAppIdIos,
       },
       privacyManifests: {
@@ -108,6 +109,12 @@ module.exports = {
         {
           androidAppId: admobAppIdAndroid,
           iosAppId: admobAppIdIos,
+        },
+      ],
+      [
+        'expo-tracking-transparency',
+        {
+          userTrackingPermission: 'NextLove utilise vos données pour vous afficher des publicités pertinentes et améliorer votre expérience.',
         },
       ],
     ],
