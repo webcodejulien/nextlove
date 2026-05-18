@@ -134,13 +134,12 @@ export function generateCompatibilitySummary(
   }
 
   // ── Humour ────────────────────────────────────────────────────────────
-  if (myQ.humorLevel && theirQ.humorLevel) {
-    const diff = Math.abs(myQ.humorLevel - theirQ.humorLevel);
-    if (diff <= 1 && myQ.humorLevel >= 7) {
+  if (myQ.humorType && theirQ.humorType) {
+    if (myQ.humorType === theirQ.humorType) {
       points.push({
         emoji: '😂',
-        title: 'Vous adorez rire',
-        description: `Vous êtes tous les deux très joueurs et aimez l\'humour.`,
+        title: 'Même sens de l\'humour',
+        description: `Vous partagez le même style d\'humour — bonne complicité en vue !`,
         strength: 'good',
       });
       sharedValues.push('Humour');
